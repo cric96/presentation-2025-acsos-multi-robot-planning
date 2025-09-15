@@ -99,11 +99,144 @@ Swarm Robotics Missions],
 
 // #components.adaptive-columns(outline(title: none, indent: 1em))
 
-= Context
+= Introduction
+
+== Reference Scenario - Search and rescue mission in disaster zone
+// Picture 40 autonomous robots in a disaster zone -- Figure
+
+- Robots move autonomously to check damaged buildings
+  - They may already know some information about the area (e.g., where the buildings are located)
+- Communications: spotty, unreliable, low-bandwidth
+- Robots may fail: battery, sensors, actuators
+- Mission goal: check as many buildings as possible in a limited time
+- How to coordinate the robots?
+
+== Central Problem
+- Planning: create a plan where each robot has a sequence of buildings to visit
+  - Initial plan created before the mission starts
+  - Based on known information about the area
+- Re-planning: update the plan during the mission
+  - New information about the area (e.g., new buildings, obstacles)
+  - Robot failures
+- Dilemma:
+  - When should the rovbotys decide "we need a new plan"
+  - What information should be considered to create the new plan?
+
+== Background
+- Traditional approaches
+  - Centralized planning: a central entity creates and updates the plan
+    - Pros: can consider global information
+    - Cons: single point of failure, communication overhead
+  - Fully distributed planning: each robot creates and updates its own plan (based on local information)
+    - Pros: no single point of failure, scalable
+    - Cons: may not consider global information, coordination challenges
+- Idea: using both local and global information to create a more robust and efficient planning approach
+- This is where our field-based approach comes in
+  - When create a global "field" that represents the environment and the robots' state
+  - Robots use those field to understand when to replan and how to coordinate
+
+== Field-based Approach - Overview
+- Write the usual intro on AC
 
 = Contribution
+== Field-based Replanning 
+- *Detection:* When should we rebuild our understanding?
+- *Construction:* How do we build a consistent view together?
+- Aggregate is used to create a global field
+  - Each robot contributes its local information to the field
+  - The field is updated periodically
+- Robots then should understand when to replan based on the field
+  - If the field indicates that many buildings are unvisited, robots may decide to replan
+  - If the field indicates that many robots have failed, robots may decide to replan
+
+== Field-based Replanning - Gossip-based
+
+== Field-based Replanning - Leader-based
 
 = Evaluation
 
-= Conclusion
-== Takeaways
+== Simulation Setup
+
+- Environment: 200x200m square area
+- Robots: 5, 10, 20, 40 robots
+- Tasks: 0.5x, 1x, 2x, 4x robot count
+- Communication range: 20m, 50m, 100m, unlimited
+- Robot failures: Poisson process (mean time: 1000s to 50000s)
+- Speed: 0.5 m/s constant
+- Task completion: stay within 10cm for 60s
+- 32 random seeds for statistical validity
+
+== Baseline Approaches
+
+- Oracle-based Centralized Replanning:
+  - Perfect real-time view of entire system
+  - Immediate recomputation upon any failure
+  - Represents ideal upper bound performance
+- Late-Stage Replanning:
+  - Execute initial plan without adaptation
+  - Only replan when robot finishes all assigned tasks
+  - Minimizes overhead but inefficient for failures
+
+== Metrics
+
+- Mission Stable Time (T_s): elapsed time until all possible tasks completed
+  - Lower values = better performance
+  - Proxy for mission efficiency despite disruptions
+- Replanning Count (C): average replanning events per robot
+  - Quantifies computational overhead
+  - Measures responsiveness to changing conditions
+
+== Key Results - Communication Range Impact
+
+- Sufficient communication range is critical for both approaches
+- With good connectivity (≥50m): near-optimal performance
+  - Both approaches achieve performance comparable to Oracle
+- With poor connectivity (20m): substantial degradation
+  - Network segmentation → wrong failure assumptions
+  - Inconsistent system views → tasks assigned to multiple robots
+- Fundamental requirement: adequate connectivity for field-based coordination
+
+== Key Results - Resilience to Failures
+
+- Gossip-based approach: significantly more resilient
+  - Consistent performance even with high failure rates (λ⁻¹ = 1000s)
+  - Scales reasonably with increasing nodes and tasks
+- Leader-based approach: vulnerable to frequent failures
+  - Good performance until failure rates increase
+  - Coordination gaps during leader failure and re-election
+- Both approaches deliver comparable performance at low failure rates
+
+== Key Results - Scalability
+
+- Increasing robots/tasks increases completion time (expected)
+- Both field-based methods scale better than baseline
+  - For moderate failure rates (λ⁻¹ ≥ 5000s)
+  - With reasonable communication (R ≥ 50m)
+- Extreme case (40 robots, 160 tasks):
+  - Field-based: ~1400s completion time
+  - Baseline: >2000s completion time
+
+== Key Results - Trade-offs
+
+- Gossip approach:
+  - Higher replanning overhead (order of magnitude more events)
+  - Superior resilience under high failure rates
+  - Every robot monitors and may trigger replanning
+- Leader approach:
+  - More computationally efficient
+  - Centralized replanning management
+  - Vulnerable during leader transitions
+- Corner cases: Field-based may underperform with rare failures
+  - Monitoring overhead when failures are uncommon
+  - Distributed consensus introduces latency
+
+== Conclusion
+
+- Field-based approaches significantly outperform late-stage baseline
+  - When communication range is sufficient (≥50m)
+  - When failures are realistic concern
+- Key trade-off: resilience vs. computational efficiency
+  - Gossip: high resilience, high overhead
+  - Leader: efficient, vulnerable to transitions
+- Limitation: dependency on communication connectivity
+- Future work: hybrid approaches, hierarchical coordination, real robot validation
