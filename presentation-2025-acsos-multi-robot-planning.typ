@@ -23,6 +23,7 @@
     ),
   )
 
+
 // Theorems configuration by ctheorems
 #show: thmrules.with(qed-symbol: $square$)
 #let theorem = thmbox("theorem", "Theorem", fill: rgb("#eeffee"))
@@ -32,6 +33,7 @@
   base: "theorem",
   titlefmt: strong
 )
+
 #let definition = thmbox("definition", "Definition", inset: (x: 1.2em, top: 1em))
 #let example = thmplain("example", "Example").with(numbering: none)
 #let proof = thmproof("proof", "Proof")
@@ -58,19 +60,19 @@ Swarm Robotics Missions],
       (("Danilo Pianini"), "danilo.pianini@unibo.it"),
       (("Mirko Viroli"), "mirko.viroli@unibo.it"),
       ),
-      //affiliations: (
-      //("1", "Department of Computer Science and Engineering, University of Bologna, Cesena, Italy"),
-      //("2", "Department of Electrical and Computer Engineering, Mälardalen University, Mälardalen, Sweden"),
-      //),
+      // affiliations: (
+      // ("1", "Department of Computer Science and Engineering, University of Bologna, Cesena, Italy"),
+      // ("2", "Department of Electrical and Computer Engineering, Mälardalen University, Mälardalen, Sweden"),
+      // ),
       logo: "images/complete-logo.svg",
     ),
-    date: datetime(day: 30, month: 09, year: 2025).display("[day] [month repr:long] [year]"),
+    // date: datetime(day: 30, month: 09, year: 2025).display("[day] [month repr:long] [year]"),
     // institution: [University of Bologna],
     // logo: align(right)[#image("images/disi.svg", width: 55%)],
   ),
 )
 
-#set text(font: "Fira Sans", weight: "light", size: 20pt)
+#set text(font: "Fira Math", weight: "light", size: 18pt)
 #show math.equation: set text(font: "Fira Math")
 
 #set raw(tab-size: 4)
@@ -101,26 +103,53 @@ Swarm Robotics Missions],
 
 = Introduction
 
+
 == Reference Scenario - Search and rescue mission in disaster zone
 // Picture 40 autonomous robots in a disaster zone -- Figure
 
-- Robots move autonomously to check damaged buildings
-  - They may already know some information about the area (e.g., where the buildings are located)
-- Communications: spotty, unreliable, low-bandwidth
-- Robots may fail: battery, sensors, actuators
-- Mission goal: check as many buildings as possible in a limited time
-- How to coordinate the robots?
+#let referenceScenario = box[
+  #table(inset: 0.1em, stroke: none, columns: (0.7fr, 1fr), align: (left, left),
+    [
+      #figure(
+        image("images/recovery-area.jpg", width: 100%),
+      ) 
+    ], [
+      - Robots move autonomously to check damaged buildings
+      - They may already know some information about the area (e.g., where the buildings are located)
+      - Communications: spotty, unreliable, low-bandwidth
+      - Robots may fail: battery, sensors, actuators
+      - Mission goal: check as many buildings as possible in a limited time
+      - How to coordinate the robots?
+    ]
+  )
+]
+
+#referenceScenario
+
 
 == Central Problem
-- Planning: create a plan where each robot has a sequence of buildings to visit
-  - Initial plan created before the mission starts
-  - Based on known information about the area
-- Re-planning: update the plan during the mission
-  - New information about the area (e.g., new buildings, obstacles)
-  - Robot failures
-- Dilemma:
-  - When should the rovbotys decide "we need a new plan"
-  - What information should be considered to create the new plan?
+
+#let centralProblem = box[
+  #table(inset: 0.1em, stroke: none, columns: (1fr, 0.7fr), align: (left),
+    [
+      - Planning: create a plan where each robot has a sequence of buildings to visit
+      - Initial plan created before the mission starts
+      - Based on known information about the area
+    - Re-planning: update the plan during the mission
+      - New information about the area (e.g., new buildings, obstacles)
+      - Robot failures
+    - Dilemma:
+      - When should the robots decide "we need a new plan"
+      - What information should be considered to create the new plan?
+    ],[
+      #figure(
+        image("images/warehouse-1.jpg", width: 105%),
+      ) 
+    ]
+  )
+]
+
+#centralProblem
 
 == Background
 - Traditional approaches
@@ -138,6 +167,10 @@ Swarm Robotics Missions],
 == Field-based Approach - Overview
 - Write the usual intro on AC
 
+#figure(
+  image("images/acDevices.svg", width: 80%),
+)
+
 = Contribution
 == Field-based Replanning 
 - *Detection:* When should we rebuild our understanding?
@@ -149,11 +182,42 @@ Swarm Robotics Missions],
   - If the field indicates that many buildings are unvisited, robots may decide to replan
   - If the field indicates that many robots have failed, robots may decide to replan
 
+
 == Field-based Replanning - Gossip-based
 
 == Field-based Replanning - Leader-based
 
 = Evaluation
+
+#let snapshots = box[
+  #figure(
+    table(inset: (0.3em, 0.5em), stroke: none, columns: (1fr, 1fr, 1fr, 1fr), align: (center, center),
+    [
+      #figure(
+        image("images/snapshot-1.png", width: 100%,)
+      )
+    ],[
+      #figure(
+        image("images/snapshot-2.png", width: 100%,)
+      )
+    ],[
+      #figure(
+        image("images/snapshot-3.png", width: 100%,)
+      )
+    ],[
+      #figure(
+        image("images/snapshot-4.png", width: 100%,)
+      )
+    ],
+    ),
+    // caption: text(size: 13pt)[
+    //   Experiment snapshots with 20 robots (little pink dots) and 80 tasks (red dots, which turns green when completed).
+    //   Pink lines are the robot trajectories, gray squares are inactive or failed robots.
+    //   Gray lines are the communication links.
+    // ]
+  )
+]
+
 
 == Simulation Setup
 
@@ -188,6 +252,8 @@ Swarm Robotics Missions],
 
 == Key Results - Communication Range Impact
 
+#snapshots
+
 - Sufficient communication range is critical for both approaches
 - With good connectivity (≥50m): near-optimal performance
   - Both approaches achieve performance comparable to Oracle
@@ -196,7 +262,43 @@ Swarm Robotics Missions],
   - Inconsistent system views → tasks assigned to multiple robots
 - Fundamental requirement: adequate connectivity for field-based coordination
 
+
+#let replanningCount = box[
+  #figure(
+    table(inset: (0.1em, 0.1em), stroke: none, columns: (1fr, 1fr), align: (center, center),
+    [
+      #figure(
+        image("images/replanning_count_20nodes_taskfact1.png", width: 80%,)
+      )
+    ],[
+      #figure(
+        image("images/replanning_count_20nodes_taskfact2.png", width: 80%,)
+      )
+    ],[
+      #figure(
+        image("images/replanning_count_40nodes_taskfact1.png", width: 80%,)
+      )
+    ],[
+      #figure(
+        image("images/replanning_count_40nodes_taskfact4.png", width: 80%,)
+      )
+    ],
+    ),
+    // caption: text(size: 13pt)[
+    //   #figure(
+    //     image("images/replanning_count_legend.png", width: 60%,)
+    //   )
+    // ]
+  )
+]
+
 == Key Results - Resilience to Failures
+
+#replanningCount
+
+#figure(
+        image("images/replanning_count_legend.png", width: 35%,)
+      )
 
 - Gossip-based approach: significantly more resilient
   - Consistent performance even with high failure rates (λ⁻¹ = 1000s)
@@ -206,7 +308,43 @@ Swarm Robotics Missions],
   - Coordination gaps during leader failure and re-election
 - Both approaches deliver comparable performance at low failure rates
 
+#let isDoneGossip = box[
+  #figure(
+    table(inset: (0.3em, 0.1em), stroke: none, columns: (1fr, 1fr), align: (center, center),
+    [
+      #figure(
+        image("images/isDone_gossip_20nodes_taskfact1.png", width: 80%,)
+      )
+    ],[
+      #figure(
+        image("images/isDone_gossip_20nodes_taskfact2.png", width: 80%,)
+      )
+    ],[
+      #figure(
+        image("images/isDone_gossip_40nodes_taskfact1.png", width: 80%,)
+      )
+    ],[
+      #figure(
+        image("images/isDone_gossip_40nodes_taskfact4.png", width: 80%,)
+      )
+    ],
+    ),
+    // caption: text(size: 13pt)[
+    //   #figure(
+    //     image("images/replanning_count_legend.png", width: 60%,)
+    //   )
+    // ]
+  )
+]
+
 == Key Results - Scalability
+
+#isDoneGossip
+
+#figure(
+  image("images/isDone_legend.png", width: 35%,)
+)
+
 
 - Increasing robots/tasks increases completion time (expected)
 - Both field-based methods scale better than baseline
@@ -216,7 +354,41 @@ Swarm Robotics Missions],
   - Field-based: ~1400s completion time
   - Baseline: >2000s completion time
 
+#let isDoneLeader = box[
+  #figure(
+    table(inset: (0.3em, 0.1em), stroke: none, columns: (1fr, 1fr), align: (center, center),
+    [
+      #figure(
+        image("images/isDone_leader_20nodes_taskfact1.png", width: 80%,)
+      )
+    ],[
+      #figure(
+        image("images/isDone_leader_20nodes_taskfact2.png", width: 80%,)
+      )
+    ],[
+      #figure(
+        image("images/isDone_leader_40nodes_taskfact1.png", width: 80%,)
+      )
+    ],[
+      #figure(
+        image("images/isDone_leader_40nodes_taskfact4.png", width: 80%,)
+      )
+    ],
+    ),
+    // caption: text(size: 13pt)[
+    //   #figure(
+    //     image("images/replanning_count_legend.png", width: 60%,)
+    //   )
+    // ]
+  )
+]
+
 == Key Results - Trade-offs
+
+#isDoneLeader
+#figure(
+  image("images/isDone_legend.png", width: 35%,)
+)
 
 - Gossip approach:
   - Higher replanning overhead (order of magnitude more events)
@@ -240,3 +412,4 @@ Swarm Robotics Missions],
   - Leader: efficient, vulnerable to transitions
 - Limitation: dependency on communication connectivity
 - Future work: hybrid approaches, hierarchical coordination, real robot validation
+

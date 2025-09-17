@@ -57,3 +57,6 @@
     ]
   )
 }
+
+#show figure.caption: set text(size: 8pt)
+
