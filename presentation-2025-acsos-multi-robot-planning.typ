@@ -413,3 +413,24 @@ Swarm Robotics Missions],
 - Limitation: dependency on communication connectivity
 - Future work: hybrid approaches, hierarchical coordination, real robot validation
 
+
+
+#let qr =  box[
+  #figure(
+    table(inset: (0.7em, 0.7em), stroke: none, columns: (1fr), align: (center),
+    [*Reproducible experiments here!*],
+    [
+      #figure(
+        image("images/repo-qr.svg", width: 30%,)
+      )
+    ],[
+      Github repository: \@ angelacorte/experiments-2025-acsos-robots
+    ],
+  )
+  )
+]
+
+== Experiments Repository
+
+#qr
+
