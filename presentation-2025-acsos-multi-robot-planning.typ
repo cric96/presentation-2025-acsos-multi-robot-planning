@@ -108,7 +108,7 @@ Swarm Robotics Missions],
 // Picture 40 autonomous robots in a disaster zone -- Figure
 
 #let referenceScenario = box[
-  #table(inset: 0.1em, stroke: none, columns: (0.7fr, 1fr), align: (left, left),
+  #table(inset: (0.5em, 0.7em), stroke: none, columns: (0.7fr, 1fr), align: (left, left),
     [
       #figure(
         image("images/recovery-area.jpg", width: 100%),
@@ -425,6 +425,10 @@ Swarm Robotics Missions],
       )
     ],[
       Github repository: \@ angelacorte/experiments-2025-acsos-robots
+      #align(center)[
+        #text(size: 32pt, weight: "bold")[Thank You!]
+      ]
+
     ],
   )
   )
@@ -433,4 +437,3 @@ Swarm Robotics Missions],
 == Experiments Repository
 
 #qr
-
