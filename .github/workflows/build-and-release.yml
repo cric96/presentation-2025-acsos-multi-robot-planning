@@ -39,7 +39,7 @@ jobs:
           sudo mv FiraMath-Regular.otf /usr/share/fonts
           sudo fc-cache -fv
         
-      - uses: typst-community/setup-typst@v4.0.2
+      - uses: typst-community/setup-typst@v4.0.3
         id: setup-typst
         with:
           version: 'latest'
