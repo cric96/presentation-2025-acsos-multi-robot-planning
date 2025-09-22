@@ -285,7 +285,6 @@ where $x_(i j r) in {0,1}$ indicates if robot $r$ travels from location $i$ to l
     ]
   )
 ]
-
 #howToReplan
 
 #pause
@@ -320,7 +319,23 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
 2. #underline[Assign] task $t^*$ to robot $r^*$ 
 3. #underline[Remove] $t^*$ from remaining tasks $cal(T)_r$
 4. #underline[Repeat] until all tasks assigned or no feasible assignments
+#focus-slide()[
+   Greedy replanning is #emph[simple] and #emph[fast].
+  #pause
+  
+  But two challenges remain:
+  #pause
 
+
+    1️⃣ How do robots maintain a consistent system view with #underline[limited communication]?
+    #pause
+  
+
+    2️⃣ How do robots decide #underline[when] to replan?
+    #pause
+
+    This is where our #emph[field-based approach] comes in!   🚀
+]
 == Field-based Approach - Overview
 - Write the usual intro on AC
 
