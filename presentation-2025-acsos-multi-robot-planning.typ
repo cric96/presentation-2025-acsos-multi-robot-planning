@@ -1,5 +1,5 @@
 #import "@preview/touying:0.6.1": *
-#import themes.metropolis: *
+#import "themes/theme.typ": *
 #import "@preview/fontawesome:0.5.0": *
 #import "@preview/ctheorems:1.1.3": *
 #import "@preview/numbly:0.1.0": numbly
@@ -38,11 +38,11 @@
 #let example = thmplain("example", "Example").with(numbering: none)
 #let proof = thmproof("proof", "Proof")
 
-#show: metropolis-theme.with(
+#show: theme.with(
   aspect-ratio: "16-9",
   footer: self => self.info.institution,
   config-common(
-    // handout: true,
+    handout: false,
     preamble: pdfpc-config,
     show-bibliography-as-footnote: bibliography(title: none, "bibliography.bib"),
   ),
@@ -72,7 +72,7 @@ Swarm Robotics Missions],
   ),
 )
 
-#set text(font: "Fira Math", weight: "light", size: 18pt)
+#set text(font: "Fira Sans", size: 18pt)
 #show math.equation: set text(font: "Fira Math")
 
 #set raw(tab-size: 4)
@@ -90,8 +90,51 @@ Swarm Robotics Missions],
 
 #set list(marker: box(height: 0.65em, align(horizon, text(size: 2em)[#sym.dot])))
 
-#let emph(content) = text(weight: "bold", style: "italic", content)
+// Emphasis helper: bold + italic + accent color
+#let emph(content) = text(style: "italic", fill: rgb("#E44F14"), content)
+// #let underline(content) = text(style: "underline", fill: rgb("#1bb0eb"), content)
 #show link: set text(hyphenate: true)
+// Definition panel: a titled box with description content (gray theme)
+#let defblock(title, description) = box(
+  fill: rgb("#f5f5f5"),
+  stroke: (left: (thickness: 4pt, paint: rgb("#9e9e9e")), rest: none),
+  radius: 0.6em,
+  inset: (x: 1em, y: 0.7em),
+  width: 100%,
+)[
+  #block(spacing: 0.4em)[
+    #text(weight: "bold", fill: rgb("#424242"))[Definition — *#title*:]
+    #description
+  ]
+]
+
+#let infoblock(
+  title,
+  description,
+  primary: rgb("#9E9E9E"),
+  elevation: 2,
+) = box(
+  // Gray theme card with top title bar
+  fill: rgb("#f5f5f5"),
+  stroke: (rest: (thickness: 0.6pt, paint: rgb("#E0E0E0"))),
+  radius: 0.7em,
+  width: 100%
+)[
+  // Top header
+  #box(
+    fill: primary,
+    inset: (x: 1.2em, y: 0.6em),
+    width: 100%,
+  )[
+    #text(weight: "semibold", fill: rgb("#FFFFFF"))[#title]
+  ]
+
+  // Body (reduced padding)
+  #box(inset: (x: 1.2em, top: -0.5em, bottom: 0.5em))[
+    #text(fill: rgb("#424242"))[#description]
+  ]
+]
+
 
 // #set heading(numbering: numbly("{1}.", default: "1.1"))
 
@@ -104,22 +147,29 @@ Swarm Robotics Missions],
 = Introduction
 
 
-== Reference Scenario - Search and rescue mission in disaster zone
+== Reference Scenario - Search and rescue mission in disaster zones
 // Picture 40 autonomous robots in a disaster zone -- Figure
 
 #let referenceScenario = box[
-  #table(inset: (0.5em, 0.7em), stroke: none, columns: (0.7fr, 1fr), align: (left, left),
+  #table(inset: (0.5em, 0.7em), stroke: none, columns: (0.9fr, 1fr), align: (left, left),
     [
       #figure(
         image("images/recovery-area.jpg", width: 100%),
       ) 
     ], [
-      - Robots move autonomously to check damaged buildings
-      - They may already know some information about the area (e.g., where the buildings are located)
-      - Communications: spotty, unreliable, low-bandwidth
-      - Robots may fail: battery, sensors, actuators
-      - Mission goal: check as many buildings as possible in a limited time
-      - How to coordinate the robots?
+      - A _Tsunami_ or _earthquake_ has hit a _city_ 
+      #pause
+      - Robots move *autonomously* to check #emph[damaged buildings] 
+      #pause
+      - They may already know some #emph[area information] (e.g., building locations)
+      #pause
+      - Communications: #underline[spotty], #underline[unreliable], #underline[low-bandwidth]
+      #pause
+      - ⚠️ Robots may *fail*: battery, sensors, actuators
+      #pause
+      - 🎯 Mission goal: check #emph[as many buildings as possible] in #emph[limited time] ⏱️
+      #pause
+      - How to #emph[coordinate] the robots❓
     ]
   )
 ]
@@ -127,42 +177,128 @@ Swarm Robotics Missions],
 #referenceScenario
 
 
-== Central Problem
+== Multi-robot Planning Problem
+#defblock([Multi-Robot Planning], [Given a set of *robots* and #underline[tasks] (e.g., buildings), produce a #emph[plan] that assigns tasks to robots and orders their execution.])
+#pause
+#defblock([Task], [A unit of work assigned to robots, completed when conditions are met.])
+#pause
+#defblock([Plan], [an ordered list of tasks assigned to each robot.])
 
 #let centralProblem = box[
-  #table(inset: 0.1em, stroke: none, columns: (1fr, 0.7fr), align: (left),
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.3fr, 0.3fr), align: (left),
     [
-      - Planning: create a plan where each robot has a sequence of buildings to visit
-      - Initial plan created before the mission starts
-      - Based on known information about the area
-    - Re-planning: update the plan during the mission
-      - New information about the area (e.g., new buildings, obstacles)
-      - Robot failures
-    - Dilemma:
-      - When should the robots decide "we need a new plan"
-      - What information should be considered to create the new plan?
+      #figure(
+        image("images/multi-robot-planning.jpg", width: 90%),
+      )
     ],[
       #figure(
-        image("images/warehouse-1.jpg", width: 105%),
+        image("images/warehouse-1.jpg", width: 80%),
       ) 
     ]
   )
 ]
-
+#meanwhile
 #centralProblem
 
-== Background
-- Traditional approaches
-  - Centralized planning: a central entity creates and updates the plan
-    - Pros: can consider global information
-    - Cons: single point of failure, communication overhead
-  - Fully distributed planning: each robot creates and updates its own plan (based on local information)
-    - Pros: no single point of failure, scalable
-    - Cons: may not consider global information, coordination challenges
-- Idea: using both local and global information to create a more robust and efficient planning approach
-- This is where our field-based approach comes in
-  - When create a global "field" that represents the environment and the robots' state
-  - Robots use those field to understand when to replan and how to coordinate
+== Multi-robot #underline[(Re)]-Planning Problem
+#defblock([Replanning], [the process of updating an existing plan in response to changes in the environment or system state.])
+
+
+#let whyReplanning = box[
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.4fr, 0.3fr), align: (left),
+    [
+#pause
+- Why replanning❓
+  - ⚠️ Robots may #emph[fail] during the mission
+  - ⚠️ Robots may discover #emph[new information] (e.g., new buildings, blocked roads)
+  - ⚠️ The environment may change dynamically (e.g., aftershocks, weather conditions)
+  - ⚠️ The initial plan may become #emph[inefficient] or #emph[infeasible]
+  - *Goal*: adapt the plan to ensure #emph[mission success] despite changes
+
+    ],[
+      #figure(
+        image("images/replanning.png", width: 100%),
+      ) 
+    ]
+  )
+]
+#whyReplanning
+
+== Problem Statement
+
+- Team of $m$ robots $cal(R) = {r_1, dots, r_m}$ 
+- Set of $n$ tasks $cal(T) = {t_1, dots, t_n}$ (e.g., buildings to check)
+- Each task visited exactly once by exactly one robot
+- Robots start from source depots $Sigma$ and end at destination depots $Delta$
+- Travel cost $omega_(i j r)$ between locations $i, j$ for robot $r$
+- Service time $xi_(i r)$ for robot $r$ to complete task $i$
+- Robots have:
+  - Limited communication range $R$
+  - Local sensing capabilities  
+  - Probability of failure during mission
+
+== Optimization Formulation
+
+#defblock([Objective], [Minimize total mission completion time across all robots])
+
+$ min J = sum_(r in cal(R)) sum_(i in cal(T)^Sigma) sum_(j in cal(T)^Delta) (omega_(i j r) + xi_(i r)) x_(i j r) $
+
+where $x_(i j r) in {0,1}$ indicates if robot $r$ goes from location $i$ to $j$
+
+#pause
+*Key constraints:*
+- Each task assigned to exactly one robot: $sum_(r in cal(R)) sum_(i in cal(T)^Sigma) x_(i j r) = 1, forall j in cal(T)$
+- Flow conservation: robots that enter a task must exit it
+- No subtours disconnected from depots
+- Each robot starts at source depot, ends at destination depot
+
+== How to Replan?
+#let howToReplan = box[
+  #table(
+    inset: (0.7em, 0.7em),
+    stroke: none,
+    columns: (1fr, 1fr),
+    align: (top, top),
+    [
+      #infoblock([Centralized Replanning], [
+        - #emph[Central entity] collects info from all robots and updates the plan.
+        - 👍 *Pros:* considers #underline[global information], often #underline[high-quality plans].
+        - 👎 *Cons:* #underline[single point of failure], #underline[high communication overhead].
+      ])
+    ],[
+      #infoblock([Decentralized Replanning], [
+        - Each robot updates its plan using #emph[local information].
+        - 👍 *Pros:* #underline[scalable], #underline[no single point of failure].
+        - 👎 *Cons:* may miss #underline[global context], #underline[coordination is hard].
+      ])
+    ]
+  )
+]
+
+#howToReplan
+#pause
+- In disaster recovery, we focus on #emph[decentralized replanning]
+- *Challenge*: how to achieve effective replanning strategy with #underline[limited communication] and #underline[local views]?
+//- This is where our #emph[field-based approach] comes in! 🚀
+
+== Greedy Replanning Algorithm
+
+#defblock([Runtime Replanning], [When failures occur, update assignments for remaining tasks using active robots])
+
+*Given:*
+- Active robots $cal(R)_a subset.eq cal(R)$ (non-failed robots)
+- Remaining tasks $cal(T)_r subset.eq cal(T)$ (unassigned tasks)
+
+*Greedy Assignment:*
+For each robot-task pair $(r_j, t_i)$, compute marginal cost:
+$ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r_j), r_j) $
+
+#pause
+*Algorithm:*
+1. Find robot-task pair $(r^*, t^*)$ with minimum cost $C(t_i, r_j)$
+2. Assign task $t^*$ to robot $r^*$ 
+3. Remove $t^*$ from remaining tasks
+4. Repeat until all tasks assigned or no feasible assignments
 
 == Field-based Approach - Overview
 - Write the usual intro on AC
