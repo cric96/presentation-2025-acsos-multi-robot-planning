@@ -399,16 +399,15 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
     ],[
       #pause
       #infoblock([Pros], [
-        • High #emph[resilience] to failures
-        • No single point of failure
-        • Fully distributed coordination
+        - High #emph[resilience] to failures
+        - No single point of failure
+        - Fully distributed coordination
       ], primary: rgb("#4CAF50"))
       
-      #pause
       #infoblock([Cons], [
-        • High #emph[computational overhead]
-        • Redundant plan computation
-        • Consensus latency in large systems
+        - High #emph[computational overhead]
+        - Redundant plan computation
+        - Consensus latency in large systems
       ], primary: rgb("#F44336"))
     ]
   )
@@ -435,16 +434,15 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
     ],[
       #pause
       #infoblock([Pros], [
-        • #emph[Low computational] load
-        • Centralized optimization
-        • Efficient resource usage
+        - #emph[Low computational] load
+        - Centralized optimization
+        - Efficient resource usage
       ], primary: rgb("#4CAF50"))
       
-      #pause
       #infoblock([Cons], [
-        • Temporary coordination gaps
-        • #emph[Network diameter] latency
-        • Potentially outdated information
+        - Temporary coordination gaps
+        - #emph[Network diameter] latency
+        - Potentially outdated information
       ], primary: rgb("#F44336"))
     ]
   )
