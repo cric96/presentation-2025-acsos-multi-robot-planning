@@ -492,7 +492,7 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
       - Area: #emph[200×200m] square grid
       - Robot fleet: #emph[5, 10, 20, 40] robots
       - Task density: #emph[0.5×, 1×, 2×, 4×] robot count
-      
+      - 32 random seeds per configuration
       *Communication & Mobility:*
       - Range: #emph[20m, 50m, 100m, unlimited]
       - Speed: #emph[0.5 m/s] constant velocity
@@ -664,7 +664,6 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
 ]
 #resilienceResults
 
-#pause
 *Key Finding:* Both approaches deliver #emph[comparable performance] at low failure rates
 
 #let isDoneGossip = box[
@@ -780,7 +779,6 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
 ]
 #tradeoffResults
 
-#pause
 *Corner Cases:* Field-based may underperform with #emph[rare failures]
 - #underline[Monitoring overhead] when failures are uncommon
 - #underline[Distributed consensus] introduces latency
