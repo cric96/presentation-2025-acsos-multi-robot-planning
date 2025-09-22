@@ -112,15 +112,12 @@ Swarm Robotics Missions],
   title,
   description,
   primary: rgb("#9E9E9E"),
-  elevation: 2,
 ) = box(
-  // Gray theme card with top title bar
   fill: rgb("#f5f5f5"),
   stroke: (rest: (thickness: 0.6pt, paint: rgb("#E0E0E0"))),
   radius: 0.7em,
   width: 100%
 )[
-  // Top header
   #box(
     fill: primary,
     inset: (x: 1.2em, y: 0.6em),
@@ -129,7 +126,6 @@ Swarm Robotics Missions],
     #text(weight: "semibold", fill: rgb("#FFFFFF"))[#title]
   ]
 
-  // Body (reduced padding)
   #box(inset: (x: 1.2em, top: -0.5em, bottom: 0.5em))[
     #text(fill: rgb("#424242"))[#description]
   ]
@@ -507,27 +503,24 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
       - Mean time to failure: #emph[1000s] to #emph[50000s]
       - Models battery depletion, sensor faults
       
-      *Statistical Validation:*
-      - #emph[32 random seeds] per configuration
-      - Confidence intervals & significance tests
     ],[
       #box[
         #table(inset: (0.2em, 0.3em), stroke: none, columns: (1fr, 1fr), align: (center, center),
           [
             #figure(
-              image("images/snapshot-1.png", width: 100%,)
+              image("images/snapshot-1.png", width: 80%,)
             )
           ],[
             #figure(
-              image("images/snapshot-2.png", width: 100%,)
+              image("images/snapshot-2.png", width: 80%,)
             )
           ],[
             #figure(
-              image("images/snapshot-3.png", width: 100%,)
+              image("images/snapshot-3.png", width: 80%,)
             )
           ],[
             #figure(
-              image("images/snapshot-4.png", width: 100%,)
+              image("images/snapshot-4.png", width: 80%,)
             )
           ],
         )
