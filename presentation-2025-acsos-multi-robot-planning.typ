@@ -228,29 +228,40 @@ Swarm Robotics Missions],
 
 - Team of $m$ robots $cal(R) = {r_1, dots, r_m}$ 
 - Set of $n$ tasks $cal(T) = {t_1, dots, t_n}$ (e.g., buildings to check)
-- Each task visited exactly once by exactly one robot
+- Each task visited #underline[exactly once] by #underline[one robot]
+
+#line(length: 100%, stroke: 1pt + gray)
+
+*System Setup:*
 - Robots start from source depots $Sigma$ and end at destination depots $Delta$
 - Travel cost $omega_(i j r)$ between locations $i, j$ for robot $r$
 - Service time $xi_(i r)$ for robot $r$ to complete task $i$
-- Robots have:
-  - Limited communication range $R$
-  - Local sensing capabilities  
-  - Probability of failure during mission
+
+#line(length: 100%, stroke: 1pt + gray)
+
+*Robot Constraints:*
+- Limited communication range $R$
+- Local sensing capabilities  
+- Probability of #underline[failure] during mission
 
 == Optimization Formulation
 
-#defblock([Objective], [Minimize total mission completion time across all robots])
+#defblock([Objective], [Minimize #underline[total mission completion time] across all robots])
 
 $ min J = sum_(r in cal(R)) sum_(i in cal(T)^Sigma) sum_(j in cal(T)^Delta) (omega_(i j r) + xi_(i r)) x_(i j r) $
 
-where $x_(i j r) in {0,1}$ indicates if robot $r$ goes from location $i$ to $j$
+where $x_(i j r) in {0,1}$ indicates if robot $r$ travels from location $i$ to location $j$
+
+#v(0.3em)
+#line(length: 100%, stroke: 2pt + rgb("#9e9e9e"))
+#v(0.3em)
 
 #pause
-*Key constraints:*
-- Each task assigned to exactly one robot: $sum_(r in cal(R)) sum_(i in cal(T)^Sigma) x_(i j r) = 1, forall j in cal(T)$
-- Flow conservation: robots that enter a task must exit it
-- No subtours disconnected from depots
-- Each robot starts at source depot, ends at destination depot
+*Key Constraints:*
+- Each task → #underline[exactly one robot]: $sum_(r in cal(R)) sum_(i in cal(T)^Sigma) x_(i j r) = 1, forall j in cal(T)$
+- #underline[Flow conservation]: robots that enter a task must exit it
+- No #underline[subtours] disconnected from depots
+- Start at source $Sigma$, end at destination $Delta$
 
 == How to Replan?
 #let howToReplan = box[
@@ -276,29 +287,39 @@ where $x_(i j r) in {0,1}$ indicates if robot $r$ goes from location $i$ to $j$
 ]
 
 #howToReplan
+
 #pause
+#v(0.3em)
+#line(length: 100%, stroke: 2pt + rgb("#E44F14"))
+#v(0.3em)
+
 - In disaster recovery, we focus on #emph[decentralized replanning]
 - *Challenge*: how to achieve effective replanning strategy with #underline[limited communication] and #underline[local views]?
 //- This is where our #emph[field-based approach] comes in! 🚀
 
 == Greedy Replanning Algorithm
 
-#defblock([Runtime Replanning], [When failures occur, update assignments for remaining tasks using active robots])
+#defblock([Runtime Replanning], [When robots #underline[fail] → reassign remaining tasks to #underline[active robots] efficiently])
 
-*Given:*
-- Active robots $cal(R)_a subset.eq cal(R)$ (non-failed robots)
-- Remaining tasks $cal(T)_r subset.eq cal(T)$ (unassigned tasks)
+#v(0.2em)
+#line(length: 100%, stroke: 1pt + gray)
+#v(0.1em)
 
-*Greedy Assignment:*
-For each robot-task pair $(r_j, t_i)$, compute marginal cost:
+*Input:* Active robots $cal(R)_a subset.eq cal(R)$ (non-failed) | Remaining tasks $cal(T)_r subset.eq cal(T)$ (unassigned)
+
+*Cost Function:* For each robot-task pair $(r_j, t_i)$:
 $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r_j), r_j) $
 
 #pause
-*Algorithm:*
-1. Find robot-task pair $(r^*, t^*)$ with minimum cost $C(t_i, r_j)$
-2. Assign task $t^*$ to robot $r^*$ 
-3. Remove $t^*$ from remaining tasks
-4. Repeat until all tasks assigned or no feasible assignments
+#v(0.2em)
+#line(length: 100%, stroke: 2pt + rgb("#9e9e9e"))
+#v(0.2em)
+
+*Algorithm Steps:*
+1. Find robot-task pair $(r^*, t^*)$ with #underline[minimum cost] $C(t_i, r_j)$
+2. #underline[Assign] task $t^*$ to robot $r^*$ 
+3. #underline[Remove] $t^*$ from remaining tasks $cal(T)_r$
+4. #underline[Repeat] until all tasks assigned or no feasible assignments
 
 == Field-based Approach - Overview
 - Write the usual intro on AC
