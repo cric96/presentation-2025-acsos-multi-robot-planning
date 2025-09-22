@@ -599,7 +599,7 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
     ],[
       #infoblock([Key Insight], [
         #emph[Adequate connectivity] is a fundamental requirement for field-based coordination to work effectively
-      ], primary: rgb("#FF5722"))
+      ])
     ]
   )
 ]
