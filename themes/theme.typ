@@ -285,7 +285,7 @@
       alert: utils.alert-with-primary-color,
     ),
     config-colors(
-      primary: rgb("#1bb0eb"),
+      primary: rgb("#827081"),
       primary-light: rgb("#b7d1d6"),
       secondary:  rgb("#23373b"),
       neutral-lightest: rgb("#fafafa"),

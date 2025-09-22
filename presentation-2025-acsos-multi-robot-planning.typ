@@ -344,36 +344,137 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
   image("images/idea.svg", width: 90%),
 )
 == Aggregate Computing In a Nutshell
-- Write the usual intro on AC
 
-#figure(
-  image("images/acDevices.svg", width: 80%),
-)
+#defblock([Aggregate Computing], [Programming paradigm for distributed systems where devices collectively compute shared data structures called #emph[computational fields].])
+
+#let acIntro = box[
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.6fr, 0.4fr), align: (left, left),
+    [
+      *Key Building Blocks:*
+      - #emph[Gossip]: collect and maintain consistent information
+      - #emph[Gradient]: compute distances from sources  
+      - #emph[Converge-cast]: aggregate data toward leaders
+      - #emph[Gradient-cast]: disseminate from leaders
+      
+      #pause
+      *Self-stabilizing Properties:*
+      - Automatically recover from failures
+      - Converge to correct global state
+      - Handle topology changes gracefully
+    ],[
+      *Computational Model:*
+      - #emph[Context creation]: devices sense local environment and neighbors
+      - #emph[Computation]: devices execute programs in rounds
+      - #emph[Communication]: devices exchange information with neighbors
+    ]
+  )
+]
+#acIntro
+
+== Field-based Replanning
+
+*Two Essential Fields:*
+1. #emph[Robot state]: positions and identifiers of active robots
+2. #emph[Task state]: completion status of all tasks
+
+*Replanning Strategy:*
+- Monitor changes in robot field → trigger replanning when topology changes
+- Execute greedy algorithm using shared global view
+- Ensure plan consistency across all robots
+
+*Two Implementation Approaches:*
+- #emph[Gossip-based]: fully distributed consensus
+- #emph[Leader-based]: centralized coordination with robust election
 
 == Field-based Replanning - Gossip-based
 
+#let gossipApproach = box[
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.55fr, 0.45fr), align: (left, left),
+    [
+      *Distributed Consensus via Gossiping:*
+      1. #emph[Stabilizing gossip]: maintains robot positions/IDs
+      2. #emph[Non-stabilizing gossip]: tracks task completion
+      
+      *Replanning Process:*
+      - Detect changes in stabilized global view
+      - All robots compute new plan independently  
+      - Check plan consistency before execution
+      - Wait for stabilization if inconsistent
+    ],[
+      #pause
+      #infoblock([Pros], [
+        • High #emph[resilience] to failures
+        • No single point of failure
+        • Fully distributed coordination
+      ], primary: rgb("#4CAF50"))
+      
+      #pause
+      #infoblock([Cons], [
+        • High #emph[computational overhead]
+        • Redundant plan computation
+        • Consensus latency in large systems
+      ], primary: rgb("#F44336"))
+    ]
+  )
+]
+#gossipApproach
+
 == Field-based Replanning - Leader-based
+
+#let leaderApproach = box[
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.55fr, 0.45fr), align: (left, left),
+    [
+      *Leader-Based Coordination:*
+      
+      1. #emph[Leader election]: self-stabilizing, robust to failures
+      2. #emph[State collection]: leader gathers system information
+      3. #emph[Replanning trigger]: leader detects topology changes
+      4. #emph[Plan computation]: centralized replanning
+      5. #emph[Plan dissemination]: broadcast to all robots
+      
+      *Key Features:*
+      - One leader per network partition
+      - Uses gradient-cast for plan distribution
+      - Automatic leader replacement on failure
+    ],[
+      #pause
+      #infoblock([Pros], [
+        • #emph[Low computational] load
+        • Centralized optimization
+        • Efficient resource usage
+      ], primary: rgb("#4CAF50"))
+      
+      #pause
+      #infoblock([Cons], [
+        • Temporary coordination gaps
+        • #emph[Network diameter] latency
+        • Potentially outdated information
+      ], primary: rgb("#F44336"))
+    ]
+  )
+]
+#leaderApproach
 
 = Evaluation
 
 #let snapshots = box[
   #figure(
-    table(inset: (0.3em, 0.5em), stroke: none, columns: (1fr, 1fr, 1fr, 1fr), align: (center, center),
+    table(inset: (0.3em, 0.5em), stroke: none, columns: (0.5fr, 1fr, 1fr, 1fr), align: (center, center),
     [
       #figure(
-        image("images/snapshot-1.png", width: 100%,)
+        image("images/snapshot-1.png", width: 60%,)
       )
     ],[
       #figure(
-        image("images/snapshot-2.png", width: 100%,)
+        image("images/snapshot-2.png", width: 60%,)
       )
     ],[
       #figure(
-        image("images/snapshot-3.png", width: 100%,)
+        image("images/snapshot-3.png", width: 60%,)
       )
     ],[
       #figure(
-        image("images/snapshot-4.png", width: 100%,)
+        image("images/snapshot-4.png", width: 60%,)
       )
     ],
     ),
@@ -388,46 +489,130 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
 
 == Simulation Setup
 
-- Environment: 200x200m square area
-- Robots: 5, 10, 20, 40 robots
-- Tasks: 0.5x, 1x, 2x, 4x robot count
-- Communication range: 20m, 50m, 100m, unlimited
-- Robot failures: Poisson process (mean time: 1000s to 50000s)
-- Speed: 0.5 m/s constant
-- Task completion: stay within 10cm for 60s
-- 32 random seeds for statistical validity
+#let simulationSetup = box[
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.5fr, 0.5fr), align: (left, left),
+    [
+      *Environment Configuration:*
+      - Area: #emph[200×200m] square grid
+      - Robot fleet: #emph[5, 10, 20, 40] robots
+      - Task density: #emph[0.5×, 1×, 2×, 4×] robot count
+      
+      *Communication & Mobility:*
+      - Range: #emph[20m, 50m, 100m, unlimited]
+      - Speed: #emph[0.5 m/s] constant velocity
+      - Task completion: stay within #emph[10cm] for #emph[60s]
+      
+      *Failure Model:*
+      - #emph[Poisson process] with varying intensities
+      - Mean time to failure: #emph[1000s] to #emph[50000s]
+      - Models battery depletion, sensor faults
+      
+      *Statistical Validation:*
+      - #emph[32 random seeds] per configuration
+      - Confidence intervals & significance tests
+    ],[
+      #box[
+        #table(inset: (0.2em, 0.3em), stroke: none, columns: (1fr, 1fr), align: (center, center),
+          [
+            #figure(
+              image("images/snapshot-1.png", width: 100%,)
+            )
+          ],[
+            #figure(
+              image("images/snapshot-2.png", width: 100%,)
+            )
+          ],[
+            #figure(
+              image("images/snapshot-3.png", width: 100%,)
+            )
+          ],[
+            #figure(
+              image("images/snapshot-4.png", width: 100%,)
+            )
+          ],
+        )
+      ]
+      
+      #text(size: 14pt, style: "italic")[
+        Simulation snapshots: robots (pink dots), tasks (red→green), trajectories (pink lines), failed robots (gray squares)
+      ]
+    ]
+  )
+]
+#simulationSetup
 
 == Baseline Approaches
 
-- Oracle-based Centralized Replanning:
-  - Perfect real-time view of entire system
-  - Immediate recomputation upon any failure
-  - Represents ideal upper bound performance
-- Late-Stage Replanning:
-  - Execute initial plan without adaptation
-  - Only replan when robot finishes all assigned tasks
-  - Minimizes overhead but inefficient for failures
+#let baselineApproaches = box[
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (1fr, 1fr), align: (top, top),
+    [
+      #infoblock([Oracle-based Centralized], [
+        - #emph[Perfect real-time] view of entire system
+        - #emph[Immediate] recomputation upon any failure
+        - Represents #emph[ideal upper bound] performance
+        - Unrealistic but provides performance ceiling
+      ], primary: rgb("#2196F3"))
+    ],[
+      #infoblock([Late-Stage Replanning], [
+        - Execute #emph[initial plan] without adaptation
+        - Only replan when robot #emph[finishes all] assigned tasks
+        - Minimizes overhead but #emph[inefficient] for failures
+        - Represents naive baseline approach
+      ], primary: rgb("#FF9800"))
+    ]
+  )
+]
+#baselineApproaches
 
-== Metrics
+== Evaluation Metrics
 
-- Mission Stable Time (T_s): elapsed time until all possible tasks completed
-  - Lower values = better performance
-  - Proxy for mission efficiency despite disruptions
-- Replanning Count (C): average replanning events per robot
-  - Quantifies computational overhead
-  - Measures responsiveness to changing conditions
+#defblock([Mission Stable Time ($T_s$)], [Elapsed time until #emph[all possible tasks] are completed — measures mission efficiency despite disruptions])
+
+#defblock([Replanning Count ($C$)], [Average #emph[replanning events] per robot — quantifies computational overhead and system responsiveness])
+#pause 
+
+#v(0.3em)
+#line(length: 100%, stroke: 2pt + rgb("#9e9e9e"))
+#v(0.3em)
+
+#let metricsDetails = box[
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (1fr, 1fr), align: (top, top),
+    [
+      *Mission Stable Time:*
+      - #emph[Lower values] = better performance
+      - Captures #emph[mission success] rate
+      - Accounts for #emph[dynamic failures]
+    ],[
+      *Replanning Count:*
+      - #emph[Higher values] = more overhead
+      - Measures #emph[system responsiveness]
+      - Trade-off with #emph[computational load]
+    ]
+  )
+]
+#metricsDetails
 
 == Key Results - Communication Range Impact
 
-#snapshots
-
-- Sufficient communication range is critical for both approaches
-- With good connectivity (≥50m): near-optimal performance
-  - Both approaches achieve performance comparable to Oracle
-- With poor connectivity (20m): substantial degradation
-  - Network segmentation → wrong failure assumptions
-  - Inconsistent system views → tasks assigned to multiple robots
-- Fundamental requirement: adequate connectivity for field-based coordination
+#let commRangeResults = box[
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.6fr, 0.4fr), align: (top, top),
+    [
+      *Critical Communication Threshold:*
+      - #emph[Sufficient range] (≥50m): near-optimal performance
+      - Both approaches achieve performance #emph[comparable to Oracle]
+      
+      *Connectivity Breakdown:*
+      - #emph[Poor connectivity] (20m): substantial degradation
+      - Network segmentation → #emph[wrong failure assumptions]
+      - Inconsistent system views → #emph[duplicate task assignments]
+    ],[
+      #infoblock([Key Insight], [
+        #emph[Adequate connectivity] is a fundamental requirement for field-based coordination to work effectively
+      ], primary: rgb("#FF5722"))
+    ]
+  )
+]
+#commRangeResults
 
 
 #let replanningCount = box[
@@ -467,13 +652,27 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
         image("images/replanning_count_legend.png", width: 35%,)
       )
 
-- Gossip-based approach: significantly more resilient
-  - Consistent performance even with high failure rates (λ⁻¹ = 1000s)
-  - Scales reasonably with increasing nodes and tasks
-- Leader-based approach: vulnerable to frequent failures
-  - Good performance until failure rates increase
-  - Coordination gaps during leader failure and re-election
-- Both approaches deliver comparable performance at low failure rates
+#let resilienceResults = box[
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (1fr, 1fr), align: (top, top),
+    [
+      #infoblock([Gossip-based Approach], [
+        - #emph[Significantly more resilient]
+        - Consistent performance even with #emph[high failure rates] (λ⁻¹ = 1000s)
+        - Scales reasonably with increasing #emph[nodes and tasks]
+      ], primary: rgb("#4CAF50"))
+    ],[
+      #infoblock([Leader-based Approach], [
+        - #emph[Vulnerable] to frequent failures
+        - Good performance until failure rates increase
+        - #emph[Coordination gaps] during leader failure and re-election
+      ], primary: rgb("#FF9800"))
+    ]
+  )
+]
+#resilienceResults
+
+#pause
+*Key Finding:* Both approaches deliver #emph[comparable performance] at low failure rates
 
 #let isDoneGossip = box[
   #figure(
@@ -504,7 +703,7 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
   )
 ]
 
-== Key Results - Scalability
+== Key Results - Scalability Analysis
 
 #isDoneGossip
 
@@ -512,14 +711,26 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
   image("images/isDone_legend.png", width: 35%,)
 )
 
-
-- Increasing robots/tasks increases completion time (expected)
-- Both field-based methods scale better than baseline
-  - For moderate failure rates (λ⁻¹ ≥ 5000s)
-  - With reasonable communication (R ≥ 50m)
-- Extreme case (40 robots, 160 tasks):
-  - Field-based: ~1400s completion time
-  - Baseline: >2000s completion time
+#let scalabilityResults = box[
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.6fr, 0.4fr), align: (left, left),
+    [
+      *Scalability Insights:*
+      - Increasing robots/tasks → #emph[higher completion time] (expected)
+      - Both field-based methods #emph[scale better] than baseline
+        - For moderate failure rates (λ⁻¹ ≥ 5000s)
+        - With reasonable communication (R ≥ 50m)
+    ],[
+      #infoblock([Performance Gain], [
+        #emph[Extreme case] (40 robots, 160 tasks):
+        • Field-based: ~#emph[1400s] completion
+        • Baseline: >#emph[2000s] completion
+        
+        *43% improvement!*
+      ])
+    ]
+  )
+]
+#scalabilityResults
 
 #let isDoneLeader = box[
   #figure(
@@ -550,37 +761,61 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
   )
 ]
 
-== Key Results - Trade-offs
+== Key Results - Approach Trade-offs
 
 #isDoneLeader
 #figure(
   image("images/isDone_legend.png", width: 35%,)
 )
 
-- Gossip approach:
-  - Higher replanning overhead (order of magnitude more events)
-  - Superior resilience under high failure rates
-  - Every robot monitors and may trigger replanning
-- Leader approach:
-  - More computationally efficient
-  - Centralized replanning management
-  - Vulnerable during leader transitions
-- Corner cases: Field-based may underperform with rare failures
-  - Monitoring overhead when failures are uncommon
-  - Distributed consensus introduces latency
+#let tradeoffResults = box[
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (1fr, 1fr), align: (top, top),
+    [
+      #infoblock([Gossip Approach], [
+        - #emph[Higher replanning overhead] (order of magnitude more events)
+        - #emph[Superior resilience] under high failure rates
+        - Every robot monitors and may trigger replanning
+      ], primary: rgb("#4CAF50"))
+    ],[
+      #infoblock([Leader Approach], [
+        - More #emph[computationally efficient]
+        - #emph[Centralized] replanning management
+        - #emph[Vulnerable] during leader transitions
+      ], primary: rgb("#FF9800"))
+    ]
+  )
+]
+#tradeoffResults
+
+#pause
+*Corner Cases:* Field-based may underperform with #emph[rare failures]
+- #underline[Monitoring overhead] when failures are uncommon
+- #underline[Distributed consensus] introduces latency
 
 == Conclusion
 
-- Field-based approaches significantly outperform late-stage baseline
-  - When communication range is sufficient (≥50m)
-  - When failures are realistic concern
-- Key trade-off: resilience vs. computational efficiency
-  - Gossip: high resilience, high overhead
-  - Leader: efficient, vulnerable to transitions
-- Limitation: dependency on communication connectivity
-- Future work: hybrid approaches, hierarchical coordination, real robot validation
-
-
+#let conclusionResults = box[
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.6fr, 0.4fr), align: (left, left),
+    [
+      *Key Findings:*
+      - Field-based approaches #emph[significantly outperform] #underline[late-stage baseline]
+        - When communication range is #emph[sufficient] (≥50m)
+        - When failures are a #emph[realistic concern]
+      
+      *Core Trade-off:* #emph[Resilience vs. Computational Efficiency]
+      - #emph[Gossip]: #underline[high resilience], high overhead
+      - #emph[Leader]: #underline[efficient], vulnerable to transitions
+    ],[
+      *Limitations & Future Directions:*
+      - *Current limitation:* dependency on #emph[communication connectivity]
+      - *Future directions:*
+        - #emph[Hybrid approaches]
+        - #emph[Hierarchical coordination]
+        - #emph[Real robot validation]
+    ]
+  )
+]
+#conclusionResults
 
 #let qr =  box[
   #figure(
@@ -601,6 +836,30 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
   )
 ]
 
-== Experiments Repository
+== Reproducible Experiments & Resources
 
+#let qr =  box[
+  #figure(
+    table(inset: (0.7em, 0.7em), stroke: none, columns: (1fr), align: (center),
+    [*Reproducible experiments here!*],
+    [
+      #figure(
+        image("images/repo-qr.svg", width: 20%,)
+      )
+      ],[
+      Github repository: \@ angelacorte/experiments-2025-acsos-robots
+
+    ],
+  )
+  )
+]
 #qr
+
+#v(0.5em)
+#line(length: 100%, stroke: 3pt + rgb("#E44F14"))
+#v(0.5em)
+
+#align(center)[
+  #text(size: 36pt, weight: "bold", fill: rgb("#E44F14"))[Thank You!]
+  
+]
