@@ -287,7 +287,7 @@
     config-colors(
       primary: rgb("#1bb0eb"),
       primary-light: rgb("#b7d1d6"),
-      secondary: rgb("#31466d"),
+      secondary:  rgb("#23373b"),
       neutral-lightest: rgb("#fafafa"),
       neutral-dark: rgb("#23373b"),
       neutral-darkest: rgb("#23373b"),

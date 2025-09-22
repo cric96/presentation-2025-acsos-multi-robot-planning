@@ -336,24 +336,19 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
 
     This is where our #emph[field-based approach] comes in!   🚀
 ]
-== Field-based Approach - Overview
+
+= Contribution
+
+== Field-based Replanning -- Overview
+#figure(
+  image("images/idea.svg", width: 90%),
+)
+== Aggregate Computing In a Nutshell
 - Write the usual intro on AC
 
 #figure(
   image("images/acDevices.svg", width: 80%),
 )
-
-= Contribution
-== Field-based Replanning 
-- *Detection:* When should we rebuild our understanding?
-- *Construction:* How do we build a consistent view together?
-- Aggregate is used to create a global field
-  - Each robot contributes its local information to the field
-  - The field is updated periodically
-- Robots then should understand when to replan based on the field
-  - If the field indicates that many buildings are unvisited, robots may decide to replan
-  - If the field indicates that many robots have failed, robots may decide to replan
-
 
 == Field-based Replanning - Gossip-based
 
