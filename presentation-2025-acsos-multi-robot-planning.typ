@@ -549,7 +549,7 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
         - Only replan when robot #emph[finishes all] assigned tasks
         - Minimizes overhead but #emph[inefficient] for failures
         - Represents naive baseline approach
-      ], primary: rgb("#FF9800"))
+      ])
     ]
   )
 ]
