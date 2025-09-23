@@ -203,13 +203,15 @@ Swarm Robotics Missions],
 #let whyReplanning = box[
   #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.4fr, 0.3fr), align: (left),
     [
-#pause
-- Why replanning❓
-  - ⚠️ Robots may #emph[fail] during the mission
-  - ⚠️ Robots may discover #emph[new information] (e.g., new buildings, blocked roads)
-  - ⚠️ The environment may change dynamically (e.g., aftershocks, weather conditions)
-  - ⚠️ The initial plan may become #emph[inefficient] or #emph[infeasible]
-  - *Goal*: adapt the plan to ensure #emph[mission success] despite changes
+      #text[Why replanning❓]
+      
+      #text[
+        - ⚠️ Robots may #emph[fail] during the mission
+        - ⚠️ Robots may discover #emph[new information] (e.g., new buildings, blocked roads)
+        - ⚠️ The environment may change dynamically (e.g., aftershocks, weather conditions)
+        - ⚠️ The initial plan may become #emph[inefficient] or #emph[infeasible]
+        - *Goal*: adapt the plan to ensure #emph[mission success] despite changes
+      ]
 
     ],[
       #figure(
@@ -221,43 +223,19 @@ Swarm Robotics Missions],
 #whyReplanning
 
 == Problem Statement
-
-- Team of $m$ robots $cal(R) = {r_1, dots, r_m}$ 
-- Set of $n$ tasks $cal(T) = {t_1, dots, t_n}$ (e.g., buildings to check)
-- Each task visited #underline[exactly once] by #underline[one robot]
-
-#line(length: 100%, stroke: 1pt + gray)
-
-*System Setup:*
-- Robots start from source depots $Sigma$ and end at destination depots $Delta$
-- Travel cost $omega_(i j r)$ between locations $i, j$ for robot $r$
-- Service time $xi_(i r)$ for robot $r$ to complete task $i$
+- $m$ robots $cal(R) = {r_1, dots, r_m}$, $n$ tasks $cal(T) = {t_1, dots, t_n}$
+- Each task assigned #underline[once] to #underline[one robot]
+- Robots start at $Sigma$, end at $Delta$
+- Travel cost $omega_(i j r)$, service time $xi_(i r)$
+- Limited communication $R$, local sensing, possible #underline[failure]
 
 #line(length: 100%, stroke: 1pt + gray)
 
-*Robot Constraints:*
-- Limited communication range $R$
-- Local sensing capabilities  
-- Probability of #underline[failure] during mission
+#defblock([Objective], [Minimize #underline[total mission time]: $ min J = sum_(r in cal(R)) sum_(i in cal(T)^Sigma) sum_(j in cal(T)^Delta) (omega_(i j r) + xi_(i r)) x_(i j r) $])
 
-== Optimization Formulation
-
-#defblock([Objective], [Minimize #underline[total mission completion time] across all robots])
-
-$ min J = sum_(r in cal(R)) sum_(i in cal(T)^Sigma) sum_(j in cal(T)^Delta) (omega_(i j r) + xi_(i r)) x_(i j r) $
-
-where $x_(i j r) in {0,1}$ indicates if robot $r$ travels from location $i$ to location $j$
-
-#v(0.3em)
-#line(length: 100%, stroke: 2pt + rgb("#9e9e9e"))
-#v(0.3em)
-
-#pause
-*Key Constraints:*
-- Each task → #underline[exactly one robot]: $sum_(r in cal(R)) sum_(i in cal(T)^Sigma) x_(i j r) = 1, forall j in cal(T)$
-- #underline[Flow conservation]: robots that enter a task must exit it
-- No #underline[subtours] disconnected from depots
-- Start at source $Sigma$, end at destination $Delta$
+*Constraints:*
+- Each task → #underline[one robot]: $sum_(r in cal(R)) sum_(i in cal(T)^Sigma) x_(i j r) = 1, forall j in cal(T)$
+- #underline[Flow conservation], no #underline[subtours], start/end at depots
 
 == How to Replan?
 #let howToReplan = box[
@@ -352,7 +330,6 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
       - #emph[Converge-cast]: aggregate data toward leaders
       - #emph[Gradient-cast]: disseminate from leaders
       
-      #pause
       *Self-stabilizing Properties:*
       - Automatically recover from failures
       - Converge to correct global state
@@ -498,7 +475,7 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
       
       *Failure Model:*
       - #emph[Poisson process] with varying intensities
-      - Mean time to failure: #emph[1000s] to #emph[50000s]
+      - Mean time to failure: #emph[15 minutes] to #emph[1.5 hours]
       - Models battery depletion, sensor faults
       
     ],[
@@ -582,7 +559,7 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
   )
 ]
 #metricsDetails
-
+/*
 == Key Results - Communication Range Impact
 
 #let commRangeResults = box[
@@ -604,7 +581,7 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
   )
 ]
 #commRangeResults
-
+*/
 
 #let replanningCount = box[
   #figure(
@@ -635,6 +612,67 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
   )
 ]
 
+== Key Results - Scalability Analysis
+
+#let isDoneComparison = box[
+  #figure(
+    table(inset: (0.3em, 0.1em), stroke: none, columns: (1fr, 1fr), align: (center, center),
+    [
+      Gossip-Based
+      #figure(
+        image("images/isDone_gossip_20nodes_taskfact1.png", width: 70%,)
+      )
+    ],[
+      Leader-Based
+      #figure(
+        image("images/isDone_leader_20nodes_taskfact1.png", width: 70%,)
+      )
+    ],[
+      #figure(
+        image("images/isDone_gossip_40nodes_taskfact4.png", width: 70%,)
+      )
+    ],[
+      #figure(
+        image("images/isDone_leader_40nodes_taskfact4.png", width: 70%,)
+      )
+    ],
+    ),
+    // caption: text(size: 13pt)[
+    //   #figure(
+    //     image("images/replanning_count_legend.png", width: 60%,)
+    //   )
+    // ]
+  )
+]
+
+#isDoneComparison
+#figure(
+  image("images/isDone_legend.png", width: 35%,)
+)
+
+#let scalabilityResults = box[
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.6fr, 0.4fr), align: (left, left),
+    [
+      *Scalability Insights:*
+      - Increasing robots/tasks → #emph[higher completion time] (expected)
+      - Both field-based methods #emph[scale better] than baseline
+        - For moderate failure rates (λ⁻¹ ≥ 5000s)
+        - With reasonable communication (R ≥ 50m)
+    ],[
+      #infoblock([Performance Gain], [
+        #emph[Extreme case] (40 robots, 160 tasks):
+        - Field-based: ~#emph[1400s] completion
+        - Baseline: >#emph[2000s] completion
+        
+        *43% improvement!*
+      ])
+    ]
+  )
+]
+#scalabilityResults
+
+
+
 == Key Results - Resilience to Failures
 
 #replanningCount
@@ -664,99 +702,9 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
 
 *Key Finding:* Both approaches deliver #emph[comparable performance] at low failure rates
 
-#let isDoneGossip = box[
-  #figure(
-    table(inset: (0.3em, 0.1em), stroke: none, columns: (1fr, 1fr), align: (center, center),
-    [
-      #figure(
-        image("images/isDone_gossip_20nodes_taskfact1.png", width: 80%,)
-      )
-    ],[
-      #figure(
-        image("images/isDone_gossip_20nodes_taskfact2.png", width: 80%,)
-      )
-    ],[
-      #figure(
-        image("images/isDone_gossip_40nodes_taskfact1.png", width: 80%,)
-      )
-    ],[
-      #figure(
-        image("images/isDone_gossip_40nodes_taskfact4.png", width: 80%,)
-      )
-    ],
-    ),
-    // caption: text(size: 13pt)[
-    //   #figure(
-    //     image("images/replanning_count_legend.png", width: 60%,)
-    //   )
-    // ]
-  )
-]
-
-== Key Results - Scalability Analysis
-
-#isDoneGossip
-
-#figure(
-  image("images/isDone_legend.png", width: 35%,)
-)
-
-#let scalabilityResults = box[
-  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.6fr, 0.4fr), align: (left, left),
-    [
-      *Scalability Insights:*
-      - Increasing robots/tasks → #emph[higher completion time] (expected)
-      - Both field-based methods #emph[scale better] than baseline
-        - For moderate failure rates (λ⁻¹ ≥ 5000s)
-        - With reasonable communication (R ≥ 50m)
-    ],[
-      #infoblock([Performance Gain], [
-        #emph[Extreme case] (40 robots, 160 tasks):
-        • Field-based: ~#emph[1400s] completion
-        • Baseline: >#emph[2000s] completion
-        
-        *43% improvement!*
-      ])
-    ]
-  )
-]
-#scalabilityResults
-
-#let isDoneLeader = box[
-  #figure(
-    table(inset: (0.3em, 0.1em), stroke: none, columns: (1fr, 1fr), align: (center, center),
-    [
-      #figure(
-        image("images/isDone_leader_20nodes_taskfact1.png", width: 80%,)
-      )
-    ],[
-      #figure(
-        image("images/isDone_leader_20nodes_taskfact2.png", width: 80%,)
-      )
-    ],[
-      #figure(
-        image("images/isDone_leader_40nodes_taskfact1.png", width: 80%,)
-      )
-    ],[
-      #figure(
-        image("images/isDone_leader_40nodes_taskfact4.png", width: 80%,)
-      )
-    ],
-    ),
-    // caption: text(size: 13pt)[
-    //   #figure(
-    //     image("images/replanning_count_legend.png", width: 60%,)
-    //   )
-    // ]
-  )
-]
 
 == Key Results - Approach Trade-offs
 
-#isDoneLeader
-#figure(
-  image("images/isDone_legend.png", width: 35%,)
-)
 
 #let tradeoffResults = box[
   #table(inset: (0.7em, 0.7em), stroke: none, columns: (1fr, 1fr), align: (top, top),
