@@ -585,7 +585,12 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
 
 #let replanningCount = box[
   #figure(
-    table(inset: (0.1em, 0.1em), stroke: none, columns: (1fr, 1fr), align: (center, center),
+    table(inset: (0.2em, 0.1em, 0.1em), stroke: none, columns: (0.1fr, 1fr, 1fr), align: (center, center, center),
+    [
+      #figure(
+        image("images/replanning_count.png", width: 50%,)
+      )
+    ],
     [
       #figure(
         image("images/replanning_count_20nodes_taskfact1.png", width: 80%,)
@@ -594,7 +599,13 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
       #figure(
         image("images/replanning_count_20nodes_taskfact2.png", width: 80%,)
       )
-    ],[
+    ],
+    [
+      #figure(
+        image("images/replanning_count.png", width: 50%,)
+      )
+    ],
+    [
       #figure(
         image("images/replanning_count_40nodes_taskfact1.png", width: 80%,)
       )
@@ -603,6 +614,19 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
         image("images/replanning_count_40nodes_taskfact4.png", width: 80%,)
       )
     ],
+    [],
+    [
+      #pad(left: 1.4em)[
+      #figure(
+        image("images/mean_failure_time.png", width: 30%,)
+      )]
+    ],
+    [
+      #pad(left: 1.4em)[
+      #figure(
+        image("images/mean_failure_time.png", width: 30%)
+      )]
+    ]
     ),
     // caption: text(size: 13pt)[
     //   #figure(
@@ -616,7 +640,13 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
 
 #let isDoneComparison = box[
   #figure(
-    table(inset: (0.3em, 0.1em), stroke: none, columns: (1fr, 1fr), align: (center, center),
+    table(inset: (0.1em, 0.3em, 0.1em), stroke: none, columns: (0.1fr, 1fr, 1fr), align: (center, center),
+    [
+      #pad(top: 1.5em)[
+      #figure(
+        image("images/stable_time.png", width: 40%,)
+      )]
+    ],
     [
       Gossip-Based
       #figure(
@@ -627,7 +657,14 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
       #figure(
         image("images/isDone_leader_20nodes_taskfact1.png", width: 70%,)
       )
-    ],[
+    ],
+    [
+      #pad(top: 1.5em)[
+      #figure(
+        image("images/stable_time.png", width: 40%,)
+      )]
+    ],
+    [
       #figure(
         image("images/isDone_gossip_40nodes_taskfact4.png", width: 70%,)
       )
@@ -635,7 +672,19 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
       #figure(
         image("images/isDone_leader_40nodes_taskfact4.png", width: 70%,)
       )
+    ],[],
+    [
+      #pad(left: 1.4em)[
+      #figure(
+        image("images/mean_failure_time.png", width: 25%,)
+      )]
     ],
+    [
+      #pad(left: 1.4em)[
+      #figure(
+        image("images/mean_failure_time.png", width: 25%)
+      )]
+    ]
     ),
     // caption: text(size: 13pt)[
     //   #figure(
@@ -647,7 +696,7 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
 
 #isDoneComparison
 #figure(
-  image("images/isDone_legend.png", width: 35%,)
+  image("images/isDone_legend.png", width: 30%,)
 )
 
 #let scalabilityResults = box[
