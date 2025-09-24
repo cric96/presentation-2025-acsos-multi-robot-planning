@@ -248,7 +248,7 @@ Swarm Robotics Missions],
       #infoblock([Centralized Replanning], [
         - #emph[Central entity] collects info from all robots and updates the plan.
         - 👍 *Pros:* considers #underline[global information], often #underline[high-quality plans].
-        - 👎 *Cons:* #underline[single point of failure], #underline[high communication overhead].
+        - 👎 *Cons:* #underline[single point of failure], #underline[high communication overhead], #underline[does not scale].
       ])
     ],[
       #infoblock([Decentralized Replanning], [
