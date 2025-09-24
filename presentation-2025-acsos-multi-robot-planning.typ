@@ -52,28 +52,27 @@ Swarm Robotics Missions],
     subtitle: [],
     author: author_list(
       (
-      (first_author("Gianluca Aguzzi"), "gianluca.aguzzi@unibo.it"),
-      (("Martina Baiardi"), "m.baiardi@unibo.it"),
-      (("Angela Cortecchia"), "angela.cortecchia@unibo.it"),
-      (("Branko Miloradovic"), "branko.miloradovic@mdu.se"),
-      (("Alessandro Papadopoulos"), "alessandro.papadopoulos@mdu.se"),
-      (("Danilo Pianini"), "danilo.pianini@unibo.it"),
-      (("Mirko Viroli"), "mirko.viroli@unibo.it"),
+      (first_author("Gianluca Aguzzi¹"), ""),
+      (("Martina Baiardi¹"), ""),
+      (("Angela Cortecchia¹"), ""),
+      (("Branko Miloradovic²"), ""),
+      (("Alessandro Papadopoulos²"), ""),
+      (("Danilo Pianini¹"), ""),
+      (("Mirko Viroli¹"), ""),
       ),
-      // affiliations: (
-      // ("1", "Department of Computer Science and Engineering, University of Bologna, Cesena, Italy"),
-      // ("2", "Department of Electrical and Computer Engineering, Mälardalen University, Mälardalen, Sweden"),
-      // ),
       logo: "images/complete-logo.svg",
     ),
+
+    institution: [¹ *DisI - University of Bologna*, ² *Mälardalen University*],
     // date: datetime(day: 30, month: 09, year: 2025).display("[day] [month repr:long] [year]"),
     // institution: [University of Bologna],
     // logo: align(right)[#image("images/disi.svg", width: 55%)],
   ),
+  
 )
 
 #set text(font: "Fira Sans", size: 18pt)
-#show math.equation: set text(font: "Fira Math")
+//#show math.equation: set text(font: "Fira Math")
 
 #set raw(tab-size: 4)
 // #show raw: set text(size: 0.85em)
