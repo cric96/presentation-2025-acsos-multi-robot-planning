@@ -49,7 +49,7 @@
   config-info(
     title: [A Field-based Approach for Runtime Replanning in
 Swarm Robotics Missions],
-    subtitle: [],
+    subtitle: text(size: 13pt)[🏆 *Artifact Evaluation:* Reproducible badge awarded ✅],
     author: author_list(
       (
       (first_author("Gianluca Aguzzi¹"), ""),
@@ -63,7 +63,7 @@ Swarm Robotics Missions],
       logo: "images/complete-logo.svg",
     ),
 
-    institution: [¹ *DisI - University of Bologna*, ² *Mälardalen University*],
+    institution: [¹ *DISI - University of Bologna*, ² *Mälardalen University*],
     // date: datetime(day: 30, month: 09, year: 2025).display("[day] [month repr:long] [year]"),
     // institution: [University of Bologna],
     // logo: align(right)[#image("images/disi.svg", width: 55%)],
@@ -779,24 +779,22 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
   #figure(
     table(inset: (0.7em, 0.7em), stroke: none, columns: (1fr), align: (center),
     [*Reproducible experiments here!*],
+    text(size: 14pt)[🏆 *Artifact Evaluation:* Reproducible badge awarded ✅],
     [
       #figure(
-        image("images/repo-qr.svg", width: 20%,)
+        image("images/repo-qr.svg", width: 15%,)
       )
-      ],[
-      Github repository: \@ angelacorte/experiments-2025-acsos-robots
-
-    ],
+      ],
+      text(size:15pt)[_Github repository_: \@ angelacorte/experiments-2025-acsos-robots],
   )
   )
 ]
 #qr
 
-#v(0.5em)
+#v(0.1em)
 #line(length: 100%, stroke: 3pt + rgb("#E44F14"))
-#v(0.5em)
+#v(0.1em)
 
 #align(center)[
-  #text(size: 36pt, weight: "bold", fill: rgb("#E44F14"))[Thank You!]
-  
+  #text(size: 30pt, weight: "bold", fill: rgb("#E44F14"))[Thank You!]
 ]
