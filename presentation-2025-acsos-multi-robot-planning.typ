@@ -106,6 +106,18 @@ Swarm Robotics Missions],
     #description
   ]
 ]
+#let goalblock(description, primary: rgb("#E44F14")) = box(
+  fill: rgb("#f5f5f5"),
+  stroke: (left: (thickness: 4pt, paint: rgb("#b7d1d6")), rest: none),
+  radius: 0.6em,
+  inset: (x: 1em, y: 0.7em),
+  width: 100%,
+)[
+  #block(spacing: 0.4em)[
+    #text(weight: "bold", fill: primary)[*Goal:*]
+    #description
+  ]
+]
 
 #let infoblock(
   title,
@@ -146,24 +158,24 @@ Swarm Robotics Missions],
 // Picture 40 autonomous robots in a disaster zone -- Figure
 
 #let referenceScenario = box[
-  #table(inset: (0.5em, 0.7em), stroke: none, columns: (0.9fr, 1fr), align: (left, left),
+  #table(inset: (0.5em, 0.7em), stroke: none, columns: (0.5fr, 1fr), align: (left, left),
     [
       #figure(
         image("images/recovery-area.jpg", width: 100%),
       ) 
     ], [
       - A _Tsunami_ or _earthquake_ has hit a _city_ 
-      #pause
+    //#pause
       - Robots move *autonomously* to check #emph[damaged buildings] 
-      #pause
+      //#pause
       - They may already know some #emph[area information] (e.g., building locations)
-      #pause
+      //#pause
       - Communications: #underline[spotty], #underline[unreliable], #underline[low-bandwidth]
-      #pause
+      //#pause
       - ⚠️ Robots may *fail*: battery, sensors, actuators
-      #pause
+      //#pause
       - 🎯 Mission goal: check #emph[as many buildings as possible] in #emph[limited time] ⏱️
-      #pause
+      //#pause
       - How to #emph[coordinate] the robots❓
     ]
   )
@@ -179,28 +191,18 @@ Swarm Robotics Missions],
 #pause
 #defblock([Plan], [an ordered list of tasks assigned to each robot.])
 
-#let centralProblem = box[
-  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.3fr, 0.3fr), align: (left),
-    [
-      #figure(
-        image("images/multi-robot-planning.jpg", width: 90%),
-      )
-    ],[
-      #figure(
-        image("images/warehouse-1.jpg", width: 80%),
-      ) 
-    ]
+#meanwhile
+#align(center)[
+  #figure(
+    image("images/multi-robot-planning.jpg", width: 50%),
   )
 ]
-#meanwhile
-#centralProblem
-
 == Multi-robot #underline[(Re)]-Planning Problem
 #defblock([Replanning], [the process of updating an existing plan in response to changes in the environment or system state.])
 
 
 #let whyReplanning = box[
-  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.4fr, 0.3fr), align: (left),
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.4fr, 0.2fr), align: (left),
     [
       #text[Why replanning❓]
       
@@ -208,8 +210,7 @@ Swarm Robotics Missions],
         - ⚠️ Robots may #emph[fail] during the mission
         - ⚠️ Robots may discover #emph[new information] (e.g., new buildings, blocked roads)
         - ⚠️ The environment may change dynamically (e.g., aftershocks, weather conditions)
-        - ⚠️ The initial plan may become #emph[inefficient] or #emph[infeasible]
-        - *Goal*: adapt the plan to ensure #emph[mission success] despite changes
+        - ⚠️ The initial plan ma
       ]
 
     ],[
@@ -220,7 +221,7 @@ Swarm Robotics Missions],
   )
 ]
 #whyReplanning
-
+#goalblock([adapt the plan to ensure #emph[mission success] despite changes])
 == Problem Statement
 - $m$ robots $cal(R) = {r_1, dots, r_m}$, $n$ tasks $cal(T) = {t_1, dots, t_n}$
 - Each task assigned #underline[once] to #underline[one robot]
