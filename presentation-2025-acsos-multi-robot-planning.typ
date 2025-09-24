@@ -518,7 +518,7 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
         - #emph[Perfect real-time] view of entire system
         - #emph[Immediate] recomputation upon any failure
         - Represents #emph[ideal upper bound] performance
-        - Unrealistic but provides performance ceiling
+        - Unrealistic but provides performance bound
       ], primary: rgb("#2196F3"))
     ],[
       #infoblock([Late-Stage Replanning], [
@@ -657,7 +657,7 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
       - Increasing robots/tasks → #emph[higher completion time] (expected)
       - Both field-based methods #emph[scale better] than baseline
         - For moderate failure rates (λ⁻¹ ≥ 5000s)
-        - With reasonable communication (R ≥ 50m)
+        - With reasonable communication range (≥ 50m)
     ],[
       #infoblock([Performance Gain], [
         #emph[Extreme case] (40 robots, 160 tasks):
