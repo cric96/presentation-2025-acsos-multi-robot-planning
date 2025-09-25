@@ -433,19 +433,19 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
     table(inset: (0.3em, 0.5em), stroke: none, columns: (0.5fr, 1fr, 1fr, 1fr), align: (center, center),
     [
       #figure(
-        image("images/snapshot-1.png", width: 60%,)
+        image("images/snapshot-1.png", width: 80%,)
       )
     ],[
       #figure(
-        image("images/snapshot-2.png", width: 60%,)
+        image("images/snapshot-2.png", width: 80%,)
       )
     ],[
       #figure(
-        image("images/snapshot-3.png", width: 60%,)
+        image("images/snapshot-3.png", width: 80%,)
       )
     ],[
       #figure(
-        image("images/snapshot-4.png", width: 60%,)
+        image("images/snapshot-4.png", width: 80%,)
       )
     ],
     ),
@@ -479,27 +479,10 @@ $ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r
       - Models battery depletion, sensor faults
       
     ],[
-      #box[
-        #table(inset: (0.2em, 0.3em), stroke: none, columns: (1fr, 1fr), align: (center, center),
-          [
-            #figure(
-              image("images/snapshot-1.png", width: 80%,)
-            )
-          ],[
-            #figure(
-              image("images/snapshot-2.png", width: 80%,)
-            )
-          ],[
-            #figure(
-              image("images/snapshot-3.png", width: 80%,)
-            )
-          ],[
-            #figure(
-              image("images/snapshot-4.png", width: 80%,)
-            )
-          ],
-        )
-      ]
+      // #snapshots
+      #figure(
+        image("images/replanning.gif", width: 90%)
+      )
       
       #text(size: 14pt, style: "italic")[
         Simulation snapshots: robots (pink dots), tasks (red→green), trajectories (pink lines), failed robots (gray squares)
