@@ -223,19 +223,20 @@ Swarm Robotics Missions],
 #whyReplanning
 #goalblock([adapt the plan to ensure #emph[mission success] despite changes])
 == Problem Statement
-- $m$ robots $cal(R) = {r_1, dots, r_m}$, $n$ tasks $cal(T) = {t_1, dots, t_n}$
-- Each task assigned #underline[once] to #underline[one robot]
-- Robots start at $Sigma$, end at $Delta$
-- Travel cost $omega_(i j r)$, service time $xi_(i r)$
-- Limited communication $R$, local sensing, possible #underline[failure]
+
+#defblock([Objective], [
+  Minimize the #emph[total mission completion time] (overall makespan).
+])
+
+*Key Constraints (high-level):*
+- #underline[Unique assignment]: each task executed by exactly one robot
+- #underline[Flow conservation]: robot routes are continuous (no jumps)
+- #underline[No subtours]: eliminate disconnected cycles (SECs)
+- #underline[Depot consistency]: each robot starts at source depot and ends at destination depot
+- (Operational context: limited communication, local sensing, possible failures)
 
 #line(length: 100%, stroke: 1pt + gray)
-
-#defblock([Objective], [Minimize #underline[total mission time]: $ min J = sum_(r in cal(R)) sum_(i in cal(T)^Sigma) sum_(j in cal(T)^Delta) (omega_(i j r) + xi_(i r)) x_(i j r) $])
-
-*Constraints:*
-- Each task → #underline[one robot]: $sum_(r in cal(R)) sum_(i in cal(T)^Sigma) x_(i j r) = 1, forall j in cal(T)$
-- #underline[Flow conservation], no #underline[subtours], start/end at depots
+#text(size: 0.75em, fill: gray)[Formal MILP with variables and costs in the paper; shown here at conceptual level for clarity.]
 
 == How to Replan?
 #let howToReplan = box[
@@ -281,7 +282,9 @@ Swarm Robotics Missions],
 *Input:* Active robots $cal(R)_a subset.eq cal(R)$ (non-failed) | Remaining tasks $cal(T)_r subset.eq cal(T)$ (unassigned)
 
 *Cost Function:* For each robot-task pair $(r_j, t_i)$:
-$ C(t_i, r_j) = omega_("current"(r_j), i, r_j) + xi_(i r_j) + omega_(i, "next"(r_j), r_j) $
+$ C(t_i, r_j) = d(c_j, t_i) + e(t_i, r_j) + d(t_i, n_j) $
+// d(a, b): travel cost between waypoints a and b
+// e(t_i, r_j): execution/service cost for robot r_j doing task t_i
 
 #pause
 #v(0.2em)
