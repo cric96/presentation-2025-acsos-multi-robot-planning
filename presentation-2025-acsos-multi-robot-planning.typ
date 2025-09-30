@@ -804,7 +804,7 @@ Swarm Robotics Missions],
   )
 ]
 
-== Reproducible Experiments & Resources
+== Reproducible Experiments
 
 #let qr =  box[
   #figure(
