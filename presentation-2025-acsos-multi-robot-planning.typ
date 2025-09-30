@@ -63,7 +63,7 @@ Swarm Robotics Missions],
       logo: "images/complete-logo.svg",
     ),
 
-    institution: [¹ *DISI - University of Bologna*, ² *Mälardalen University*],
+    institution: [¹ *University of Bologna*, ² *Mälardalen University*],
     // date: datetime(day: 30, month: 09, year: 2025).display("[day] [month repr:long] [year]"),
     // institution: [University of Bologna],
     // logo: align(right)[#image("images/disi.svg", width: 55%)],
