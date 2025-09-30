@@ -210,7 +210,6 @@ Swarm Robotics Missions],
         - ⚠️ Robots may #emph[fail] during the mission
         - ⚠️ Robots may discover #emph[new information] (e.g., new buildings, blocked roads)
         - ⚠️ The environment may change dynamically (e.g., aftershocks, weather conditions)
-        - ⚠️ The initial plan ma
       ]
 
     ],[
@@ -222,6 +221,7 @@ Swarm Robotics Missions],
 ]
 #whyReplanning
 #goalblock([adapt the plan to ensure #emph[mission success] despite changes])
+/*
 == Problem Statement
 
 #defblock([Objective], [
@@ -234,9 +234,7 @@ Swarm Robotics Missions],
 - #underline[No subtours]: eliminate disconnected cycles (SECs)
 - #underline[Depot consistency]: each robot starts at source depot and ends at destination depot
 - (Operational context: limited communication, local sensing, possible failures)
-
-#line(length: 100%, stroke: 1pt + gray)
-#text(size: 0.75em, fill: gray)[Formal MILP with variables and costs in the paper; shown here at conceptual level for clarity.]
+*/
 
 == How to Replan?
 #let howToReplan = box[
@@ -273,16 +271,17 @@ Swarm Robotics Missions],
 
 == Greedy Replanning Algorithm
 
-#defblock([Runtime Replanning], [When robots #underline[fail] → reassign remaining tasks to #underline[active robots] efficiently])
+//#defblock([Runtime Replanning], [When robots #underline[fail] → reassign remaining tasks to #underline[active robots] efficiently])
 
-#v(0.2em)
-#line(length: 100%, stroke: 1pt + gray)
-#v(0.1em)
+//#v(0.2em)
+//#line(length: 100%, stroke: 1pt + gray)
+//#v(0.1em)
 
 *Input:* Active robots $cal(R)_a subset.eq cal(R)$ (non-failed) | Remaining tasks $cal(T)_r subset.eq cal(T)$ (unassigned)
 
-*Cost Function:* For each robot-task pair $(r_j, t_i)$:
-$ C(t_i, r_j) = d(c_j, t_i) + e(t_i, r_j) + d(t_i, n_j) $
+*Cost Function:* #emph[Marginal cost] of inserting task $t_i$ at optimal position in robot $r_j$'s plan:
+// $ C(t_i, r_j) = "travel to task" + "execution time" + "travel to next" $ 
+
 // d(a, b): travel cost between waypoints a and b
 // e(t_i, r_j): execution/service cost for robot r_j doing task t_i
 
@@ -325,23 +324,22 @@ $ C(t_i, r_j) = d(c_j, t_i) + e(t_i, r_j) + d(t_i, n_j) $
 #defblock([Aggregate Computing], [Programming paradigm for distributed systems where devices collectively compute shared data structures called #emph[computational fields].])
 
 #let acIntro = box[
-  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.6fr, 0.4fr), align: (left, left),
+  #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.4fr, 0.6fr), align: (left, left),
+    [
+      *Computational Model:*
+      - #emph[Context creation]: devices sense local environment and neighbors
+      - #emph[Computation]: devices execute programs in rounds
+      - #emph[Communication]: devices exchange information with neighbors
+    ],
     [
       *Key Building Blocks:*
       - #emph[Gossip]: collect and maintain consistent information
-      - #emph[Gradient]: compute distances from sources  
-      - #emph[Converge-cast]: aggregate data toward leaders
       - #emph[Gradient-cast]: disseminate from leaders
       
       *Self-stabilizing Properties:*
       - Automatically recover from failures
       - Converge to correct global state
       - Handle topology changes gracefully
-    ],[
-      *Computational Model:*
-      - #emph[Context creation]: devices sense local environment and neighbors
-      - #emph[Computation]: devices execute programs in rounds
-      - #emph[Communication]: devices exchange information with neighbors
     ]
   )
 ]
@@ -349,7 +347,7 @@ $ C(t_i, r_j) = d(c_j, t_i) + e(t_i, r_j) + d(t_i, n_j) $
 
 == Field-based Replanning
 
-*Two Essential Fields:*
+*Information needed for replanning:*
 1. #emph[Robot state]: positions and identifiers of active robots
 2. #emph[Task state]: completion status of all tasks
 
@@ -368,8 +366,8 @@ $ C(t_i, r_j) = d(c_j, t_i) + e(t_i, r_j) + d(t_i, n_j) $
   #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.55fr, 0.45fr), align: (left, left),
     [
       *Distributed Consensus via Gossiping:*
-      1. #emph[Stabilizing gossip]: maintains robot positions/IDs
-      2. #emph[Non-stabilizing gossip]: tracks task completion
+      1. #emph[Gossip]: maintains robot positions/IDs
+      2. #emph[Gossip]: tracks task completion
       
       *Replanning Process:*
       - Detect changes in stabilized global view
@@ -404,7 +402,7 @@ $ C(t_i, r_j) = d(c_j, t_i) + e(t_i, r_j) + d(t_i, n_j) $
       1. #emph[Leader election]: self-stabilizing, robust to failures
       2. #emph[State collection]: leader gathers system information
       3. #emph[Replanning trigger]: leader detects topology changes
-      4. #emph[Plan computation]: centralized replanning
+      4. #emph[Plan computation]: leader performs the replanning
       5. #emph[Plan dissemination]: broadcast to all robots
       
       *Key Features:*
@@ -479,7 +477,7 @@ $ C(t_i, r_j) = d(c_j, t_i) + e(t_i, r_j) + d(t_i, n_j) $
       *Failure Model:*
       - #emph[Poisson process] with varying intensities
       - Mean time to failure: #emph[15 minutes] to #emph[1.5 hours]
-      - Models battery depletion, sensor faults
+      
       
     ],[
       // #snapshots
@@ -535,12 +533,10 @@ $ C(t_i, r_j) = d(c_j, t_i) + e(t_i, r_j) + d(t_i, n_j) $
       *Mission Stable Time:*
       - #emph[Lower values] = better performance
       - Captures #emph[mission success] rate
-      - Accounts for #emph[dynamic failures]
     ],[
       *Replanning Count:*
       - #emph[Higher values] = more overhead
       - Measures #emph[system responsiveness]
-      - Trade-off with #emph[computational load]
     ]
   )
 ]
@@ -622,7 +618,7 @@ $ C(t_i, r_j) = d(c_j, t_i) + e(t_i, r_j) + d(t_i, n_j) $
   )
 ]
 
-== Key Results - Scalability Analysis
+== Key Results - Stable Time Comparison
 
 #let isDoneComparison = box[
   #figure(
@@ -684,7 +680,7 @@ $ C(t_i, r_j) = d(c_j, t_i) + e(t_i, r_j) + d(t_i, n_j) $
 #figure(
   image("images/isDone_legend.png", width: 30%,)
 )
-
+/*
 #let scalabilityResults = box[
   #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.6fr, 0.4fr), align: (left, left),
     [
@@ -704,17 +700,9 @@ $ C(t_i, r_j) = d(c_j, t_i) + e(t_i, r_j) + d(t_i, n_j) $
     ]
   )
 ]
-#scalabilityResults
-
-
-
+#scalabilityResults*/
+/*
 == Key Results - Resilience to Failures
-
-#replanningCount
-
-#figure(
-        image("images/replanning_count_legend.png", width: 35%,)
-      )
 
 #let resilienceResults = box[
   #table(inset: (0.7em, 0.7em), stroke: none, columns: (1fr, 1fr), align: (top, top),
@@ -736,8 +724,17 @@ $ C(t_i, r_j) = d(c_j, t_i) + e(t_i, r_j) + d(t_i, n_j) $
 #resilienceResults
 
 *Key Finding:* Both approaches deliver #emph[comparable performance] at low failure rates
+*/
 
+== Key Results - Replanning Count
 
+#replanningCount
+
+#figure(
+        image("images/replanning_count_legend.png", width: 35%,)
+      )
+
+/*
 == Key Results - Approach Trade-offs
 
 
@@ -763,14 +760,14 @@ $ C(t_i, r_j) = d(c_j, t_i) + e(t_i, r_j) + d(t_i, n_j) $
 *Corner Cases:* Field-based may underperform with #emph[rare failures]
 - #underline[Monitoring overhead] when failures are uncommon
 - #underline[Distributed consensus] introduces latency
-
+*/
 == Conclusion
 
 #let conclusionResults = box[
   #table(inset: (0.7em, 0.7em), stroke: none, columns: (0.6fr, 0.4fr), align: (left, left),
     [
       *Key Findings:*
-      - Field-based approaches #emph[significantly outperform] #underline[late-stage baseline]
+      - Field-based approaches #emph[outperform] #underline[late-stage baseline]
         - When communication range is #emph[sufficient] (≥50m)
         - When failures are a #emph[realistic concern]
       
@@ -782,7 +779,6 @@ $ C(t_i, r_j) = d(c_j, t_i) + e(t_i, r_j) + d(t_i, n_j) $
       - *Current limitation:* dependency on #emph[communication connectivity]
       - *Future directions:*
         - #emph[Hybrid approaches]
-        - #emph[Hierarchical coordination]
         - #emph[Real robot validation]
     ]
   )
