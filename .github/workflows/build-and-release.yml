@@ -70,7 +70,7 @@ jobs:
           echo "TAG=$(git describe --tags --exact-match HEAD)" >> $GITHUB_OUTPUT
 
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: github.ref_name == 'master'
         with:
           name: "Release — ${{ steps.autotag.outputs.tag }}"
